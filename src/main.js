@@ -1,6 +1,6 @@
 import Trip from './presenter/trip';
 import {render} from './render';
-import FilterView from './view/filter';
+import FilterView from './view/filters';
 
 const filterContainer = document.querySelector('.trip-controls__filters');
 const tripContainer = document.querySelector('.trip-events');
