@@ -1,4 +1,5 @@
 import { createElement } from '../render';
+
 const createFiltersTemplate = () =>
   ` <form class="trip-filters" action="#" method="get">
     <div class="trip-filters__filter">
@@ -16,18 +17,21 @@ const createFiltersTemplate = () =>
     <button class="visually-hidden" type="submit">Accept filter</button>
   </form>`;
 
-  
+
 export default class FiltersView {
   constructor() {
     this.element = null;
   }
+
   getTemplate() {
     return createFiltersTemplate();
   }
+
   getElement() {
     this.element = this.element || createElement(this.getTemplate());
     return this.element;
   }
+
   removeElement() {
     this.element = null;
   }

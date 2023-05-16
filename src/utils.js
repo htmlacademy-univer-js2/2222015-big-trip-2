@@ -32,3 +32,4 @@ const randomInteger = (min, max) => {
   };
   
   export { randomInteger, humanizeDateTime, upperCaseFirst };
+  
