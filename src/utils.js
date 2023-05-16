@@ -7,15 +7,12 @@ const randomInteger = (min, max) => {
     if (!str) {
       return str;
     }
-  
     return str[0].toUpperCase() + str.slice(1);
   }
-  
   const humanizeDateTime = (dateFrom, dateTo) => {
     const oneMinuteInMilliseconds = 60 * 1000;
     const oneHourInMilliseconds = 60 * oneMinuteInMilliseconds;
     const oneDayInMilliseconds = 24 * oneHourInMilliseconds;
-  
     const datetimeBetween = dateTo.diff(dateFrom);
     if (datetimeBetween > oneDayInMilliseconds) {
       return `${parseInt(datetimeBetween / oneDayInMilliseconds, 10)}D ${parseInt(
@@ -30,6 +27,4 @@ const randomInteger = (min, max) => {
       return `${parseInt(datetimeBetween % oneHourInMilliseconds, 10) / oneMinuteInMilliseconds}M`;
     }
   };
-  
   export { randomInteger, humanizeDateTime, upperCaseFirst };
-  

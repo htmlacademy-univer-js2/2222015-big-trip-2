@@ -6,7 +6,7 @@ export default class PointsListView {
   constructor() {
     this.element = null;
   }
-  
+
   getTemplate() {
     return createPointsListTemplate();
   }
