@@ -6,10 +6,10 @@ const RenderPosition = {
 };
 
 const createElement = (template) => {
-  const newElement = document.createElement('div');
-  newElement.innerHTML = template;
+  const newElement = document.createElement('div'); // 1
+  newElement.innerHTML = template; // 2
 
-  return newElement.firstElementChild;
+  return newElement.firstElementChild; // 3
 };
 
 const render = (component, container, place = RenderPosition.BEFOREEND) => {
