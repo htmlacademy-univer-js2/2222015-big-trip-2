@@ -1,7 +1,7 @@
-import {createElement} from '../render';
+import { createElement } from '../render';
 
-const createFilterTemplate = () => (
-  `<form class="trip-filters" action="#" method="get">
+const createFiltersTemplate = () =>
+  ` <form class="trip-filters" action="#" method="get">
     <div class="trip-filters__filter">
       <input id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="everything">
       <label class="trip-filters__filter-label" for="filter-everything">Everything</label>
@@ -15,19 +15,20 @@ const createFilterTemplate = () => (
       <label class="trip-filters__filter-label" for="filter-past">Past</label>
     </div>
     <button class="visually-hidden" type="submit">Accept filter</button>
-  </form>`
-);
+  </form>`;
 
-export default class FilterView {
+
+export default class FiltersView {
+  constructor() {
+    this.element = null;
+  }
+
   getTemplate() {
-    return createFilterTemplate();
+    return createFiltersTemplate();
   }
 
   getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
+    this.element = this.element || createElement(this.getTemplate());
     return this.element;
   }
 
