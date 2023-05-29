@@ -6,14 +6,14 @@ const RenderPosition = {
 };
 
 const createElement = (template) => {
-  const newElement = document.createElement('div'); // 1
-  newElement.innerHTML = template; // 2
+  const newElement = document.createElement('div');
+  newElement.innerHTML = template;
 
-  return newElement.firstElementChild; // 3
+  return newElement.firstElementChild;
 };
 
 const render = (component, container, place = RenderPosition.BEFOREEND) => {
-  container.insertAdjacentElement(place, component.getElement());
+  container.insertAdjacentElement(place, component.element);
 };
 
 export { RenderPosition, createElement, render };
