@@ -16,13 +16,12 @@ const createTripTitleInfo = (points, destinations) => {
     return destinationsOrder[0];
   } else if (destinationsOrder.length > 3) {
     return `${destinationsOrder[0]} &mdash;...&mdash; ${destinationsOrder[destinationsOrder.length - 1]}`;
-  } else {
-    return destinationsOrder.join(' &mdash; ');
   }
+  return destinationsOrder.join(' &mdash; ');
 };
 
 const createDatesInfo = (points) =>
-`${dayjs(points[0].dateFrom).format('MMM D')}&nbsp;&mdash;&nbsp;${dayjs(points[points.length - 1].dateTo).format('MMM D')}`;
+  `${dayjs(points[0].dateFrom).format('MMM D')}&nbsp;&mdash;&nbsp;${dayjs(points[points.length - 1].dateTo).format('MMM D')}`;
 
 const getFullPointPrice = (point, offersByType) => {
   const offers = offersByType.find((offerByType) => offerByType.type === point.type).offers;
