@@ -29,14 +29,14 @@ export default class FiltersView extends AbsractView {
       this.#filters = filters;
       this.#currentFilter = currentFilter;
       this.#filterChange = filterChange;
-  
+
       this.element.addEventListener('click', this.#filterChangeHandler);
     }
 
     get template() {
       return createFiltersTemplate(this.#filters, this.#currentFilter);
     }
-  
+
   #filterChangeHandler = (evt) => {
     if (evt.target.tagName === 'LABEL') {
       const target = evt.target;
