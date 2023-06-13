@@ -9,6 +9,7 @@ import EmptyPointsListView from '../view/empty-points-list-view';
 import NewPointButtonView from '../view/new-point-button.view';
 import InfoView from '../view/info-view';
 import LoadingView from '../view/loading-view';
+import ErrorView from '../view/error-view';
 
 export default class Trip {
   #container = null;
@@ -17,12 +18,14 @@ export default class Trip {
   #pointsListComponent = new PointsListView();
   #emptyPointsListComponent = new EmptyPointsListView();
   #loadingComponent = new LoadingView();
+  #errorComponent = new ErrorView();
   #sortComponent = null;
   #newPointButtonComponent = null;
   #infoComponent = null;
 
   #pointsModel = null;
   #filtersModel = null;
+
   #currentSortType = SortType.DAY;
   #isLoading = true;
 
@@ -88,7 +91,7 @@ export default class Trip {
       case UserAction.DELETE_POINT:
         this.#pointPresenter.get(update.id).setDeleting();
         try {
-          await this.this.#pointsModel.deletePoint(updateType, update);
+          await this.#pointsModel.deletePoint(updateType, update);
         } catch {
           this.#pointPresenter.get(update.id).setAborting();
         }
@@ -108,48 +111,16 @@ export default class Trip {
       case UpdateType.INIT:
         this.#isLoading = false;
         remove(this.#loadingComponent);
-        this.#createNewPointPresenter();
-        this.#renderNewPointButton();
-        this.#renderPointsList();
+        if (this.#pointsModel.errored) {
+          this.#renderNewPointButton(true);
+          this.#renderError();
+        } else {
+          this.#createNewPointPresenter();
+          this.#renderNewPointButton(false);
+          this.#renderPointsList();
+        }
         break;
     }
-  };
-
-  #handleModeChange = () => {
-    this.#pointPresenter.forEach((presenter) => presenter.resetView());
-  };
-
-  #handleSortButtonClick = (sortType) => {
-    if (sortType === this.#currentSortType) {
-      return;
-    }
-
-    this.#currentSortType = sortType;
-    this.#clearPointsList();
-    this.#renderPointsList();
-  };
-
-  #clearPointsList = () => {
-    this.#pointPresenter.forEach((presenter) => presenter.destroy());
-    this.#pointPresenter.clear();
-    this.#newPointPresenter.destroy();
-    this.#clearInfo();
-  };
-
-  #renderPoint = (point) => {
-    const pointPresenter = new PointPresenter({
-      container: this.#pointsListComponent.element,
-      destinations: this.destinations,
-      offers: this.offers,
-      changeData: this.#handleViewAction,
-      changeMode: this.#handleModeChange,
-    });
-    pointPresenter.init(point);
-    this.#pointPresenter.set(point.id, pointPresenter);
-  };
-
-  #renderPoints = () => {
-    this.points.forEach((point) => this.#renderPoint(point));
   };
 
   #renderPointsList = () => {
@@ -165,6 +136,38 @@ export default class Trip {
     }
   };
 
+  #renderPoints = () => {
+    this.points.forEach((point) => this.#renderPoint(point));
+  };
+
+  #renderPoint = (point) => {
+    const pointPresenter = new PointPresenter({
+      container: this.#pointsListComponent.element,
+      destinations: this.destinations,
+      offers: this.offers,
+      changeData: this.#handleViewAction,
+      changeMode: this.#handleModeChange,
+    });
+    pointPresenter.init(point);
+    this.#pointPresenter.set(point.id, pointPresenter);
+  };
+
+  #createNewPointPresenter = () => {
+    this.#newPointPresenter = new NewPointPresenter({
+      newPointContainer: this.#pointsListComponent.element,
+      pointsModel: this.#pointsModel,
+      handleChangeData: this.#handleViewAction,
+      handleDestroy: this.#handleNewPointClose,
+    });
+  };
+
+  #clearPointsList = () => {
+    this.#pointPresenter.forEach((presenter) => presenter.destroy());
+    this.#pointPresenter.clear();
+    this.#newPointPresenter.destroy();
+    this.#clearInfo();
+  };
+
   #renderEmptyPointsList = () => {
     render(this.#emptyPointsListComponent, this.#container);
   };
@@ -173,6 +176,10 @@ export default class Trip {
     render(this.#loadingComponent, this.#container);
   };
 
+  #renderError = () => {
+    render(this.#errorComponent, this.#container);
+  }
+
   #renderSort = () => {
     if (this.#sortComponent === null) {
       this.#sortComponent = new SortView(this.#handleSortButtonClick);
@@ -180,11 +187,23 @@ export default class Trip {
     render(this.#sortComponent, this.#container, RenderPosition.AFTERBEGIN);
   };
 
-  #renderNewPointButton = () => {
-    if (this.#newPointButtonComponent === null) {
-      this.#newPointButtonComponent = new NewPointButtonView({ buttonClick: this.#handleNewPointButtonClick });
+   #renderNewPointButton = (isDisabled) => {
+     if (this.#newPointButtonComponent === null) {
+       this.#newPointButtonComponent = new NewPointButtonView({ buttonClick: this.#handleNewPointButtonClick, isDisabled: isDisabled });
+     }
+     render(this.#newPointButtonComponent, this.#menuContainer, RenderPosition.BEFOREEND);
+   };
+
+  #renderInfo = () => {
+    if (this.#infoComponent === null) {
+      this.#infoComponent = new InfoView(this.#pointsModel.points, this.destinations, this.offers);
     }
-    render(this.#newPointButtonComponent, this.#menuContainer, RenderPosition.BEFOREEND);
+    render(this.#infoComponent, this.#menuContainer, RenderPosition.AFTERBEGIN);
+  };
+
+  #clearInfo = () => {
+    remove(this.#infoComponent);
+    this.#infoComponent = null;
   };
 
   #handleNewPointButtonClick = () => {
@@ -196,24 +215,17 @@ export default class Trip {
     this.#newPointButtonComponent.element.disabled = false;
   };
 
-  #renderInfo = () => {
-    if (this.#infoComponent === null) {
-      this.#infoComponent = new InfoView(this.#pointsModel.points, this.destinations);
+  #handleModeChange = () => {
+    this.#pointPresenter.forEach((presenter) => presenter.resetView());
+  };
+
+  #handleSortButtonClick = (sortType) => {
+    if (sortType === this.#currentSortType) {
+      return;
     }
-    render(this.#infoComponent, this.#menuContainer, RenderPosition.AFTERBEGIN);
-  };
 
-  #clearInfo = () => {
-    remove(this.#infoComponent);
-    this.#infoComponent = null;
-  };
-
-  #createNewPointPresenter = () => {
-    this.#newPointPresenter = new NewPointPresenter({
-      newPointContainer: this.#pointsListComponent.element,
-      pointsModel: this.#pointsModel,
-      handleChangeData: this.#handleViewAction,
-      handleDestroy: this.#handleNewPointClose,
-    });
+    this.#currentSortType = sortType;
+    this.#clearPointsList();
+    this.#renderPointsList();
   };
 }
