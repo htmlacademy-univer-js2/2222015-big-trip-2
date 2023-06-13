@@ -172,7 +172,7 @@ export default class EditPointView extends AbstractStatefulView {
     this.#destinations = destinations;
     this.#offersByType = offersByType;
     this._state = EditPointView.parsePointToState(point, offersByType, destinations);
-    
+
     this.#saveClick = saveClick;
     this.#closeClick = closeClick;
     this.#deleteClick = deleteClick;
@@ -254,7 +254,7 @@ export default class EditPointView extends AbstractStatefulView {
     evt.preventDefault();
     this.#deleteClick(EditPointView.parseStateToPoint(this._state));
   };
-  
+
   #closeClickHandler = (evt) => {
     evt.preventDefault();
     this.#closeClick();

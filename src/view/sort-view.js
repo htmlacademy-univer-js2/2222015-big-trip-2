@@ -30,7 +30,7 @@ export default class SortView extends AbstractView {
 
     constructor(sortButtonClick) {
       super();
-  
+
       this.#sortButtonClick = sortButtonClick;
       this.element.addEventListener('click', this.#sortButtonClickHandler);
     }
@@ -38,7 +38,7 @@ export default class SortView extends AbstractView {
     get template() {
       return createSortTemplate();
     }
-    
+
     #sortButtonClickHandler = (evt) => {
       if (evt.target.tagName !== 'INPUT') {
         return;
