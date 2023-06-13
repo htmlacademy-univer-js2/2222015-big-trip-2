@@ -30,14 +30,14 @@ const createOffersTemplate = (offers) =>
           <span class="event__offer-price">${offer.price}</span>
         </label>
         </div>`
-        )
+    )
     .join('\n');
 
 const createTypesTemplate = (offersByType) => {
   const types = offersByType.map((type) => type.type);
   return types
-  .map(
-    (type) => `
+    .map(
+      (type) => `
     <div class="event__type-item">
       <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
       <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">
@@ -243,8 +243,8 @@ export default class EditPointView extends AbstractStatefulView {
     this.updateElement({
       type: type,
       offersObjects: this.#offersByType
-      .find((offer) => offer.type === type)
-      .offers.map((offer) => ({ ...offer, isChecked: false })),
+        .find((offer) => offer.type === type)
+        .offers.map((offer) => ({ ...offer, isChecked: false })),
     });
   };
 
@@ -279,11 +279,11 @@ export default class EditPointView extends AbstractStatefulView {
   static parsePointToState = (point, offersByType, destinations) => ({
     ...point,
     offers: offersByType
-    .find((offer) => offer.type === point.type)
-    .offers.map((offer) => ({
-      ...offer,
-      isChecked: point.offers.includes(offer.id),
-    })),
+      .find((offer) => offer.type === point.type)
+      .offers.map((offer) => ({
+        ...offer,
+        isChecked: point.offers.includes(offer.id),
+      })),
     destination: destinations.find((destination) => destination.id === point.destination),
     isDesinationCorrect: true,
   });

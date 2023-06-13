@@ -10,16 +10,16 @@ const createFilterItemTemplate = (filter, currentFilter) => `
     </div>
     `;
     
-    const createFiltersTemplate = (filters, currentFilter) => {
-      const filterItemsTemplate = filters.map((filter) => createFilterItemTemplate(filter, currentFilter)).join('');
-      return `
+const createFiltersTemplate = (filters, currentFilter) => {
+  const filterItemsTemplate = filters.map((filter) => createFilterItemTemplate(filter, currentFilter)).join('');
+  return `
       <form class="trip-filters" action="#" method="get">
         ${filterItemsTemplate}
     <button class="visually-hidden" type="submit">Accept filter</button>
   </form>`;
 };
 
-  export default class FiltersView extends AbsractView {
+export default class FiltersView extends AbsractView {
     #filters = null;
     #currentFilter = null;
     #filterChange = null;
@@ -33,9 +33,9 @@ const createFilterItemTemplate = (filter, currentFilter) => `
       this.element.addEventListener('click', this.#filterChangeHandler);
     }
 
-  get template() {
-    return createFiltersTemplate(this.#filters, this.#currentFilter);
-  }
+    get template() {
+      return createFiltersTemplate(this.#filters, this.#currentFilter);
+    }
 
   #filterChangeHandler = (evt) => {
     if (evt.target.tagName === 'LABEL') {

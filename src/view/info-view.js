@@ -38,7 +38,7 @@ const createInfoTemplate = (points, destinations) => {
       Total: &euro;&nbsp;<span class="trip-info__cost-value">${summaryPrice}</span>
     </p>
     </section>`;
-  };
+};
 
 export default class InfoView extends AbsractView {
   #points = null;
