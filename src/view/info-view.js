@@ -16,21 +16,18 @@ const createTripTitleInfo = (points, destinations) => {
     return destinationsOrder[0];
   } else if (destinationsOrder.length > 3) {
     return `${destinationsOrder[0]} &mdash;...&mdash; ${destinationsOrder[destinationsOrder.length - 1]}`;
+  } else {
+    return destinationsOrder.join(' &mdash; ');
   }
-  return destinationsOrder.join(' &mdash; ');
 };
 
 const createDatesInfo = (points) =>
-  `${dayjs(points[0].dateFrom).format('MMM D')}&nbsp;&mdash;&nbsp;${dayjs(points[points.length - 1].dateTo).format('MMM D')}`;
+  `${dayjs(points[0].dateFrom).format('MMM D')}&nbsp;&mdash;&nbsp;${dayjs(points[points.length - 1].dateTo).format(
+    'MMM D'
+  )}`;
 
-const getFullPointPrice = (point, offersByType) => {
-  const offers = offersByType.find((offerByType) => offerByType.type === point.type).offers;
-  const offersPrice = point.offers.reduce((currentValue, offer) => offers.find((off) => off.id === offer).price + currentValue, 0);
-  return offersPrice + point.basePrice;
-};
-
-const createInfoTemplate = (points, destinations, offersByType) => {
-  const summaryPrice = points.reduce((currentValue, point) => getFullPointPrice(point, offersByType) + currentValue, 0);
+const createInfoTemplate = (points, destinations) => {
+  const summaryPrice = points.reduce((currentValue, point) => point.basePrice + currentValue, 0);
   const tripInfoTitle = createTripTitleInfo(points, destinations);
   const datesInfo = createDatesInfo(points);
   return `
@@ -50,16 +47,14 @@ const createInfoTemplate = (points, destinations, offersByType) => {
 export default class InfoView extends AbsractView {
   #points = null;
   #destinations = null;
-  #offers = null;
 
-  constructor(points, destinations, offers) {
+  constructor(points, destinations) {
     super();
     this.#points = points.sort(SortFunctions[SortType.DAY]);
     this.#destinations = destinations;
-    this.#offers = offers;
   }
 
   get template() {
-    return createInfoTemplate(this.#points, this.#destinations, this.#offers);
+    return createInfoTemplate(this.#points, this.#destinations);
   }
 }
