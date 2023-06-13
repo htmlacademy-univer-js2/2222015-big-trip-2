@@ -1,6 +1,6 @@
 import { randomInteger } from '../utils';
 
-const descriptions = ['Просто бомба', 'Smth idk', 'OK'];
+const descriptions = ['Nice', 'Smth idk', 'OK'];
 const names = ['LA', 'Moscow', 'Berlin', 'London', 'Paris', 'Rome', 'Madrid'];
 
 export const createDestination = (id) => ({
