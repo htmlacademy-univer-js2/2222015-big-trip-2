@@ -25,7 +25,7 @@ const createSortTemplate = () =>
     </div>
   </form>`;
 
-  export default class SortView extends AbstractView {
+export default class SortView extends AbstractView {
     #sortButtonClick = null;
 
     constructor(sortButtonClick) {
